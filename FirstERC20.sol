@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MIT
+//000000000000000000
 pragma solidity ^0.6.0;
+import "./TransactionCounter.sol";
 contract FirstErc20 {
+    // Declare a TransactionCounter contract
+    TransactionCounter public counter;
+    
     // Mapping from account addresses to current balance.
     mapping (address => uint256) private _balances;
 
@@ -33,7 +38,8 @@ contract FirstErc20 {
                 string memory symbol,
                 uint8 decimals,
                 uint256 amount2Owner,
-                uint256 cap) public
+                uint256 cap,
+                address counterAddress) public
     {
         require(cap >= amount2Owner, 'ERC20: amount exceeds cap');
         _name = name;
@@ -44,11 +50,14 @@ contract FirstErc20 {
         _totalSupply = amount2Owner;
         _balances[msg.sender] = amount2Owner;
         admin[msg.sender] = true;
+        //Counter is deployed at 0x1c838F02051FDc5fB8a935a4053c1102941008Dd 
+        counter = TransactionCounter(counterAddress);
     }
 
     // A modifier for checking if the msg.sender is one of the admins.
     modifier onlyAdmin() {
-        require(admin[msg.sender] = true, "ERC20: Only an admin can perform this action");
+        //require(admin[msg.sender], "ERC20: Only an admin can perform this action");
+        require(admin[msg.sender] == true, "ERC20: Only an admin can perform this action");
         _;
     }
 
@@ -100,6 +109,7 @@ contract FirstErc20 {
         require(_balances[msg.sender] >= _amount, 'ERC20: transfer amount exceeds balance');
         _balances[msg.sender] -= _amount;
         _balances[_recipient] += _amount;
+        counter.tick();
         emit Transfer(msg.sender, _recipient, _amount);
         return true;
     }
@@ -135,6 +145,7 @@ contract FirstErc20 {
         _balances[_sender] -= _amount;
         _balances[_recipient] += _amount;
         _allowances[_sender][msg.sender] -= _amount;
+        counter.tick();
         emit Transfer(_sender, _recipient, _amount);
         return true;
     }
@@ -146,6 +157,7 @@ contract FirstErc20 {
         require(_totalSupply + _amount <= _cap, "ERC20: cap exceeded");
         _totalSupply += _amount;
         _balances[_account] += _amount;
+        counter.tick();
         emit Transfer(address(0), _account, _amount);
         return true;
     }
@@ -154,11 +166,17 @@ contract FirstErc20 {
     // the total supply.
     // Emits a `Transfer` event with `_to` set to the zero address.
     function burn(address _account, uint256 _amount) public onlyAdmin returns(bool) {
-        uint burntAmount =_balances[_account] > _amount ? _balances[_account] - _amount : _balances[_account];
+        uint burntAmount =_balances[_account] > _amount ? _amount : _balances[_account];
         _totalSupply -= burntAmount;
         _balances[_account] -= burntAmount;
+        counter.tick();
         emit Transfer(_account, address(0), burntAmount);
         return true; 
+    }
+    
+    // Returns the current value of the counter: number of transactions
+    function transactionCount() public view returns(uint256){
+        return counter.getCount();
     }
 
     // Emitted when `_value` tokens are moved from one account (`_from`) to another (`_to`)

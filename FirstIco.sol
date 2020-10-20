@@ -14,7 +14,7 @@ contract FirstIco {
     constructor(uint256 price, address payable seller, address erc20Address ) public {
         _price = price;
         _seller = seller;
-        //Token is deployed at 0xE82d4ddbdB0530419f51563eAAd7A7C512C4b1d5
+        //Token is deployed at 0xd7D0F1E14D084F0831817e33054d804490df942a
         token = FirstErc20(erc20Address);
     }
 

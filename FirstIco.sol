@@ -11,19 +11,20 @@ contract FirstIco {
     // Address of token seller
     address payable private _seller;
 
-    constructor(uint256 price, address payable seller, address erc20Address ) public {
+    constructor(uint256 price, address erc20Address ) public {
         _price = price;
-        _seller = seller;
-        //Token is deployed at 0xd7D0F1E14D084F0831817e33054d804490df942a
+        //Token is deployed at 0xb19Fb21C630DB1F287B39F550634Ce55076BC526
         token = FirstErc20(erc20Address);
+        _seller = token.getOwner();
     }
 
     // receive external function payable which handles automatically the receipt of ether inside the contract from user, is called when the amount is sent by the user
     receive() external payable {
-        require(msg.value >= 0, "ICO: Price is not 0 ether");
+        buy(msg.value/_price);
+/*        require(msg.value >= 0, "ICO: Price is not 0 ether");
         uint nbTokens = msg.value / _price;
         token.transferFrom(_seller, msg.sender, nbTokens);
-        _seller.transfer(msg.value);
+        _seller.transfer(msg.value);*/
     }
 
     function buy(uint256 nbTokens) public payable returns(bool){

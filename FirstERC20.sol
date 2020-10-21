@@ -50,7 +50,7 @@ contract FirstErc20 {
         _totalSupply = amount2Owner;
         _balances[msg.sender] = amount2Owner;
         admin[msg.sender] = true;
-        //Counter is deployed at 0x1c838F02051FDc5fB8a935a4053c1102941008Dd 
+        //Counter is deployed at 0xD213b4177Bc72f38a8F22c249755938a158a2886 
         counter = TransactionCounter(counterAddress);
     }
 
@@ -90,17 +90,20 @@ contract FirstErc20 {
     function cap() public view returns (uint256) {
         return _cap;
     }
+    
+    // Returns the address of the owner.
+    function getOwner() public view returns (address payable) {
+        return _ownerAddress;
+    }
 
     // Adds an address among the admins (only an admin can call the function)
-    function addAdmin(address _account) public onlyAdmin returns (bool){
+    function addAdmin(address _account) public onlyAdmin {
         admin[_account] = true;
-        return true;
     }
     
     // Removes an address from the admins (only an admin can call the function)
-    function delAdmin(address _account) public onlyAdmin returns (bool){
+    function delAdmin(address _account) public onlyAdmin {
         admin[_account] = false;
-        return true;
     }
 
     // Moves `_amount` tokens from the caller's account to `_recipient`.

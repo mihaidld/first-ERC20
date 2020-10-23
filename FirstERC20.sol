@@ -2,9 +2,12 @@
 //000000000000000000
 pragma solidity ^0.6.0;
 import "./TransactionCounter.sol";
+
+//contract deployed at 0x5F3215c30432d2c481BA56b0F7Fa34375cb079A4
+
 contract FirstErc20 {
     // Declare a TransactionCounter contract
-    TransactionCounter public counter;
+    TransactionCounter private counter;
     
     // Mapping from account addresses to current balance.
     mapping (address => uint256) private _balances;
@@ -34,6 +37,7 @@ contract FirstErc20 {
     // Mapping of addresses that administer the smart contract used for governance, administrative and sensitive functions. The corresponding value of an admin address is true.
     mapping(address => bool) admin;
 
+    //need to get TransactionCounter address 
     constructor(string memory name,
                 string memory symbol,
                 uint8 decimals,
@@ -50,7 +54,7 @@ contract FirstErc20 {
         _totalSupply = amount2Owner;
         _balances[msg.sender] = amount2Owner;
         admin[msg.sender] = true;
-        //Counter is deployed at 0xD213b4177Bc72f38a8F22c249755938a158a2886 
+        //Counter is deployed at 0x255Cab97fEd72A8CA556f43281a83046C2c6f915 
         counter = TransactionCounter(counterAddress);
     }
 

@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 import "./FirstErc20.sol";
+
+//contract deployed at 0xf13c61824480e52796a378969F9a262021D0E386
+
 contract FirstIco {
     // Declare a FirstErc20 contract
     FirstErc20 public token;
@@ -13,7 +16,7 @@ contract FirstIco {
 
     constructor(uint256 price, address erc20Address ) public {
         _price = price;
-        //Token is deployed at 0xb19Fb21C630DB1F287B39F550634Ce55076BC526
+        //Token is deployed at 0x5F3215c30432d2c481BA56b0F7Fa34375cb079A4
         token = FirstErc20(erc20Address);
         _seller = token.getOwner();
     }

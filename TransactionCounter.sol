@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+
+//contract deployed at 0x255Cab97fEd72A8CA556f43281a83046C2c6f915
+
 contract TransactionCounter {
     // Name of the counter
     uint256 private _counter;
     
     // Address of the owner, used for administrative and sensitive function.
-    address _ownerAddress;
+    address private _ownerAddress;
     
     // Mapping of addresses authorized to call tick()
-    mapping(address => bool) tickers;
+    mapping(address => bool) private tickers;
 
     constructor() public
     {
@@ -34,14 +37,17 @@ contract TransactionCounter {
     }
 
     // Adds an address among the admins (authorized to call tick()
-    function addTicker(address _ticker) public onlyAdmin returns (bool){
+    function addTicker(address _ticker) public onlyAdmin {
         tickers[_ticker] = true;
-        return true;
     }
     
     // Removes an address from the admins ((authorized to call tick())
-    function delTicker(address _ticker) public onlyAdmin returns (bool){
+    function delTicker(address _ticker) public onlyAdmin {
         tickers[_ticker] = false;
-        return true;
+    }
+    
+    // Checks if an address is authorized to call tick()
+    function getTicker(address _addr) public view returns (bool){
+        return tickers[_addr];
     }
 }
